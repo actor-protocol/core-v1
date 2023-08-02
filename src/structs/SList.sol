@@ -2,7 +2,7 @@
 pragma solidity ^0.8.21;
 
 /**
- * Data structure that supports insert and remove operations in O(1) time.
+ * @dev Data structure that supports insert and remove operations in O(1) time.
  */
 struct List {
     uint64 _length;

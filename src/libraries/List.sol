@@ -6,7 +6,7 @@ import {List} from "../structs/SList.sol";
 // This is a library that contains utility functions to work with the List struct.
 library ListLibrary {
     /**
-     * Checks if a given value exists in the list.
+     * @dev Checks if a given value exists in the list.
      * @param self The reference to List.
      * @param _value The value.
      */
@@ -17,7 +17,7 @@ library ListLibrary {
     }
 
     /**
-     * Inserts a value into the list.
+     * @dev Inserts a value into the list.
      * @param self The reference to List.
      * @param _value The value.
      */
@@ -41,7 +41,7 @@ library ListLibrary {
     }
 
     /**
-     * Removes a value from the list.
+     * @dev Removes a value from the list.
      * @param self The reference to List.
      * @param _value The value.
      */

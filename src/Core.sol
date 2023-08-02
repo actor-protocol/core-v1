@@ -57,15 +57,14 @@ contract Core is ICore, Context, ReentrancyGuard {
     }
 
     /**
-     * Core contract constructor.
+     * @notice Core contract constructor.
      */
     constructor(address _manager) {
         s_manager = _manager;
     }
 
     /**
-     * Updates values in source and action registers.
-     *
+     * @notice Updates values in source and action registers.
      * @param t The type of register to be updated.
      * @param addr The address of a source or action.
      * @param value The new register value for the given address.
@@ -89,7 +88,7 @@ contract Core is ICore, Context, ReentrancyGuard {
     }
 
     /**
-     * Checks if the given address is registered in the Source register.
+     * @notice Checks if the given address is registered in the Source register.
      * @return value The result boolean.
      */
     function checkSourceRegister(address addr) external view returns (bool) {
@@ -98,7 +97,7 @@ contract Core is ICore, Context, ReentrancyGuard {
     }
 
     /**
-     * Checks if the given address is registered in the Source register.
+     * @notice Checks if the given address is registered in the Source register.
      * @return value The result boolean.
      */
     function checkActionRegister(address addr) external view returns (bool) {
@@ -107,7 +106,7 @@ contract Core is ICore, Context, ReentrancyGuard {
     }
 
     /**
-     * Updates execution pause state value.
+     * @notice Updates execution pause state value.
      * @param value The new execution pause value.
      */
     function updateExecutionPauseState(bool value) external onlyManager {
@@ -119,7 +118,7 @@ contract Core is ICore, Context, ReentrancyGuard {
     }
 
     /**
-     * Returns the current state of execution paused flag.
+     * @notice Returns the current state of execution paused flag.
      * @return state Bool indicating whether the execution is currently paused or not.
      */
     function getExecutionPausedState() external view returns (bool) {
@@ -128,7 +127,7 @@ contract Core is ICore, Context, ReentrancyGuard {
     }
 
     /**
-     * Returns scenario ID counter value.
+     * @notice Returns scenario ID counter value.
      * @return value Counter value.
      */
     function getCounter() external view returns (uint256) {
@@ -137,7 +136,7 @@ contract Core is ICore, Context, ReentrancyGuard {
     }
 
     /**
-     * Retrieves information about a scenario using its ID.
+     * @notice Retrieves information about a scenario using its ID.
      * @param id The ID of the scenario.
      * @return status The status of the operation.
      * @return scenario The data of the scenario.
@@ -154,7 +153,7 @@ contract Core is ICore, Context, ReentrancyGuard {
     }
 
     /**
-     * Retrieves all scenarios associated with a particular address.
+     * @notice Retrieves all scenarios associated with a particular address.
      * @param owner The address of the owner.
      */
     function getScenariosByOwner(address owner) external view returns (ScenarioWrapper[] memory m_scenarios) {
@@ -174,7 +173,7 @@ contract Core is ICore, Context, ReentrancyGuard {
     }
 
     /**
-     * Retrieves the IDs of all scenarios associated with a particular owner.
+     * @notice Retrieves the IDs of all scenarios associated with a particular owner.
      * @param owner The address of the owner.
      */
     function getScenariosIdsByOwner(address owner) external view returns (uint64[] memory m_ids) {
@@ -194,7 +193,7 @@ contract Core is ICore, Context, ReentrancyGuard {
     }
 
     /**
-     * Adds a new scenario.
+     * @notice Adds a new scenario.
      * @param scenario The data of the scenario to be added.
      */
     function addScenario(Scenario calldata scenario) external returns (uint64 id) {
@@ -272,7 +271,7 @@ contract Core is ICore, Context, ReentrancyGuard {
     }
 
     /**
-     * Removes a scenario.
+     * @notice Removes a scenario.
      * @param id The ID of the scenario to be removed.
      */
     function removeScenario(uint64 id) external {
@@ -299,7 +298,7 @@ contract Core is ICore, Context, ReentrancyGuard {
     }
 
     /**
-     * Executes a script within the specified scenario.
+     * @notice Executes a script within the specified scenario.
      * @param owner The address of the owner.
      * @param id The ID of the scenario.
      * @param scriptIndex The index of the script within the scenario.
