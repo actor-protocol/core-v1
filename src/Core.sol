@@ -8,7 +8,7 @@ import {ListLibrary} from "./libraries/List.sol";
 
 import {RegisterType} from "./enums/ERegisterType.sol";
 
-import {Scenario, ScenarioWrapper} from "./structs/SScenario.sol";
+import {TriggerType, Script, Scenario, ScenarioWrapper} from "./structs/SScenario.sol";
 import {SourceData} from "./structs/SSourceData.sol";
 import {ActionData} from "./structs/SActionData.sol";
 
@@ -325,17 +325,36 @@ contract Core is ICore, Context, ReentrancyGuard {
         // Get the reference to the scenario using the provided ID.
         Scenario storage s_scenario = s_scenarios[id];
 
+        // Get the reference to the specified script within the scenario.
+        Script storage s_script = s_scenario.scripts[scriptIndex];
+
+        // Counter to keep track of the number of valid sources in the script.
+        uint8 validSources = 0;
+
         // Loop through each source in the script's sources_to_verify array.
-        for (uint8 i = 0; i < s_scenario.scripts[scriptIndex].sources_to_verify.length;) {
+        for (uint8 i = 0; i < s_script.sources_to_verify.length;) {
             // Get the reference to the source.
-            SourceData storage source = s_scenario.scripts[scriptIndex].sources_to_verify[i];
+            SourceData storage source = s_script.sources_to_verify[i];
 
             // Validate the source by calling its `validate` function and passing necessary data.
             try ISource(source.addr).validate(
                 SourceCall({kind: source.kind, input: source.input, condition: source.condition})
-            ) {} catch {
-                // Revert the transaction with an error message if validation fails.
-                revert SourceValidationError(source.addr);
+            ) {
+                // Increment the validSources counter.
+                unchecked {
+                    validSources++;
+                }
+
+                // If trigger type is ANY, exit the loop after the first valid source.
+                if (s_script.trigger_type == TriggerType.ANY) {
+                    break;
+                }
+            } catch {
+                // If trigger type is ALL, revert the transaction if validation fails.
+                if (s_script.trigger_type == TriggerType.ALL) {
+                    // Revert the transaction with an error message if validation fails.
+                    revert SourceValidationError(source.addr);
+                }
             }
 
             // Increment i using unchecked to bypass overflow checks.
@@ -344,14 +363,19 @@ contract Core is ICore, Context, ReentrancyGuard {
             }
         }
 
+        // If trigger type is ANY and no valid sources were found, revert the transaction.
+        if (s_script.trigger_type == TriggerType.ANY && validSources == 0) {
+            revert NoValidSources();
+        }
+
         // Prepare the input data for the script's execution.
         ExecutorInputData memory input_data =
             ExecutorInputData({input_token: s_scenario.input_token, amount: s_scenario.input_amount});
 
         // Loop through each action in the script's actions_chain array.
-        for (uint8 i = 0; i < s_scenario.scripts[scriptIndex].actions_chain.length;) {
+        for (uint8 i = 0; i < s_script.actions_chain.length;) {
             // Get the reference to the action.
-            ActionData storage s_action = s_scenario.scripts[scriptIndex].actions_chain[i];
+            ActionData storage s_action = s_script.actions_chain[i];
 
             // Transfer the specified amount of input tokens to the action's executor.
             IERC20(input_data.input_token).safeTransfer(s_action.executor, input_data.amount);

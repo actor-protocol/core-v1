@@ -4,7 +4,13 @@ pragma solidity ^0.8.21;
 import {SourceData} from "./SSourceData.sol";
 import {ActionData} from "./SActionData.sol";
 
+enum TriggerType {
+    ALL,
+    ANY
+}
+
 struct Script {
+    TriggerType trigger_type;
     SourceData[] sources_to_verify;
     ActionData[] actions_chain;
 }
