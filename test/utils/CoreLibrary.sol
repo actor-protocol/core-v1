@@ -10,7 +10,7 @@ import {Core} from "src/Core.sol";
 
 import {RegisterType} from "src/enums/ERegisterType.sol";
 
-import {Script, Scenario, ScenarioWrapper} from "src/structs/SScenario.sol";
+import {Script, Scenario, ScenarioWrapper, TriggerType} from "src/structs/SScenario.sol";
 import {SourceData} from "src/structs/SSourceData.sol";
 import {ActionData} from "src/structs/SActionData.sol";
 
@@ -72,7 +72,8 @@ library CoreLibrary {
         IERC20 token,
         address owner,
         SourceData[] memory sources,
-        ActionData[] memory actions
+        ActionData[] memory actions,
+        TriggerType trigger_type
     ) external returns (uint64 id) {
         // Set up variables for the test scenario.
         uint256 defaultAmount = 1_000_000;
@@ -88,6 +89,7 @@ library CoreLibrary {
 
         // Create a script for the scenario.
         Script[] memory scripts = new Script[](1);
+        scripts[0].trigger_type = trigger_type;
         scripts[0].sources_to_verify = sources;
         scripts[0].actions_chain = actions;
 

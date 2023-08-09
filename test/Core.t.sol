@@ -11,7 +11,7 @@ import {Core} from "src/Core.sol";
 import {RegisterType} from "src/enums/ERegisterType.sol";
 import {List} from "src/structs/SList.sol";
 
-import {Script, Scenario, ScenarioWrapper} from "src/structs/SScenario.sol";
+import {Script, Scenario, ScenarioWrapper, TriggerType} from "src/structs/SScenario.sol";
 import {SourceData} from "src/structs/SSourceData.sol";
 import {ActionData} from "src/structs/SActionData.sol";
 
@@ -362,12 +362,37 @@ contract CoreTest is Test {
         ActionData[] memory actions = new ActionData[](1);
         actions[0] = ActionData({executor: address(transferExecutor), input: abi.encode(address(this))});
 
-        uint64 id = core.addSomeScenario(token, address(1), sources, actions);
+        uint64 id = core.addSomeScenario(token, address(1), sources, actions, TriggerType.ALL);
 
         // Simulate sender address being set to the actor.
         vm.prank(address(2));
         // Expect the function call to revert with the reason "SourceValidationError".
         vm.expectRevert(abi.encodeWithSelector(SourceValidationError.selector, address(dexsource)));
+
+        // Try to execute the scenario.
+        core.executeScenario(address(1), id, 0);
+    }
+
+    // Function to test validation failure during scenario execution.
+    function testAnyTriggerValidationRevertExecuteScenario() external {
+        // Create an invalid scenario with an invalid source kind (1).
+        SourceData[] memory sources = new SourceData[](1);
+        sources[0] = SourceData({
+            addr: address(dexsource),
+            kind: 1, // Invalid Kind
+            input: "",
+            condition: ""
+        });
+
+        ActionData[] memory actions = new ActionData[](1);
+        actions[0] = ActionData({executor: address(transferExecutor), input: abi.encode(address(this))});
+
+        uint64 id = core.addSomeScenario(token, address(1), sources, actions, TriggerType.ANY);
+
+        // Simulate sender address being set to the actor.
+        vm.prank(address(2));
+        // Expect the function call to revert with the reason "NoValidSources".
+        vm.expectRevert(NoValidSources.selector);
 
         // Try to execute the scenario.
         core.executeScenario(address(1), id, 0);
@@ -382,7 +407,7 @@ contract CoreTest is Test {
         ActionData[] memory actions = new ActionData[](1);
         actions[0] = ActionData({executor: address(transferExecutor), input: ""});
 
-        uint64 id = core.addSomeScenario(token, address(1), sources, actions);
+        uint64 id = core.addSomeScenario(token, address(1), sources, actions, TriggerType.ALL);
 
         // Simulate sender address being set to the actor.
         vm.prank(address(2));
@@ -402,7 +427,7 @@ contract CoreTest is Test {
         ActionData[] memory actions = new ActionData[](1);
         actions[0] = ActionData({executor: address(nothingExecutor), input: ""});
 
-        uint64 id = core.addSomeScenario(token, address(1), sources, actions);
+        uint64 id = core.addSomeScenario(token, address(1), sources, actions, TriggerType.ALL);
 
         // Simulate sender address being set to the actor.
         vm.prank(address(2));
@@ -422,7 +447,7 @@ contract CoreTest is Test {
         ActionData[] memory actions = new ActionData[](1);
         actions[0] = ActionData({executor: address(transferExecutor), input: abi.encode(address(3))});
 
-        uint64 id = core.addSomeScenario(token, address(1), sources, actions);
+        uint64 id = core.addSomeScenario(token, address(1), sources, actions, TriggerType.ALL);
         (, Scenario memory scenario) = core.getScenario(id);
 
         // Simulate sender address being set to the actor.

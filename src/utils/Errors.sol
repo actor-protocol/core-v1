@@ -18,3 +18,4 @@ error InvalidActionExecutor(address value);
 
 error SourceValidationError(address value);
 error ActionExecutionError(address value);
+error NoValidSources();
