@@ -328,8 +328,8 @@ contract Core is ICore, Context, ReentrancyGuard {
         // Get the reference to the specified script within the scenario.
         Script storage s_script = s_scenario.scripts[scriptIndex];
 
-        // Counter to keep track of the number of valid sources in the script.
-        uint8 validSources = 0;
+        // Flag indicating if at least one valid source was found.
+        bool validSource = false;
 
         // Loop through each source in the script's sources_to_verify array.
         for (uint8 i = 0; i < s_script.sources_to_verify.length;) {
@@ -340,13 +340,9 @@ contract Core is ICore, Context, ReentrancyGuard {
             try ISource(source.addr).validate(
                 SourceCall({kind: source.kind, input: source.input, condition: source.condition})
             ) {
-                // Increment the validSources counter.
-                unchecked {
-                    validSources++;
-                }
-
-                // If trigger type is ANY, exit the loop after the first valid source.
+                // If trigger type is ANY, set valid source flag as true and exit the loop.
                 if (s_script.trigger_type == TriggerType.ANY) {
+                    validSource = true;
                     break;
                 }
             } catch {
@@ -363,8 +359,8 @@ contract Core is ICore, Context, ReentrancyGuard {
             }
         }
 
-        // If trigger type is ANY and no valid sources were found, revert the transaction.
-        if (s_script.trigger_type == TriggerType.ANY && validSources == 0) {
+        // If trigger type is ANY and no valid source found, revert the transaction.
+        if (s_script.trigger_type == TriggerType.ANY && !validSource) {
             revert NoValidSources();
         }
 
