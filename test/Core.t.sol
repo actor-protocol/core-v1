@@ -171,7 +171,7 @@ contract CoreTest is Test {
         });
 
         // Add the scenario to the Core contract.
-        core.addScenario(scenario);
+        core.addScenario(scenario, 0);
 
         // Stop the sender address simulation.
         vm.stopPrank();
@@ -198,7 +198,7 @@ contract CoreTest is Test {
         vm.expectRevert(InvalidActorAddress.selector);
 
         // Try to add the scenario.
-        core.addScenario(scenario);
+        core.addScenario(scenario, 0);
     }
 
     // Function to test adding a scenario with an invalid input token address.
@@ -217,7 +217,7 @@ contract CoreTest is Test {
         vm.expectRevert(InvalidInputTokenAddress.selector);
 
         // Try to add the scenario.
-        core.addScenario(scenario);
+        core.addScenario(scenario, 0);
     }
 
     // Function to test adding a scenario with an invalid input amount.
@@ -236,7 +236,7 @@ contract CoreTest is Test {
         vm.expectRevert(InvalidInputAmount.selector);
 
         // Try to add the scenario.
-        core.addScenario(scenario);
+        core.addScenario(scenario, 0);
     }
 
     // Function to test adding a scenario with an invalid source address.
@@ -258,7 +258,7 @@ contract CoreTest is Test {
         vm.expectRevert(abi.encodeWithSelector(InvalidSource.selector, address(0)));
 
         // Try to add the scenario.
-        core.addScenario(scenario);
+        core.addScenario(scenario, 0);
     }
 
     // Function to test adding a scenario with an invalid action executor address.
@@ -280,7 +280,7 @@ contract CoreTest is Test {
         vm.expectRevert(abi.encodeWithSelector(InvalidActionExecutor.selector, address(0)));
 
         // Add the scenario to the Core contract (should revert due to invalid action executor address).
-        core.addScenario(scenario);
+        core.addScenario(scenario, 0);
     }
 
     // Function to test unauthorized removal of a scenario.

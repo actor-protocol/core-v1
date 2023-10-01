@@ -195,8 +195,9 @@ contract Core is ICore, Context, ReentrancyGuard {
     /**
      * @notice Adds a new scenario.
      * @param scenario The data of the scenario to be added.
+     * @param index_id An identifier associated with the scenario (for off-chain matching purposes).
      */
-    function addScenario(Scenario calldata scenario) external returns (uint64 id) {
+    function addScenario(Scenario calldata scenario, uint64 index_id) external returns (uint64 id) {
         // Check if the actor address is valid (not equal to address(0)).
         if (scenario.actor == address(0)) {
             revert InvalidActorAddress();
@@ -267,7 +268,7 @@ contract Core is ICore, Context, ReentrancyGuard {
         s_list[_msgSender()].insert(id);
 
         // Emit an event to indicate successful addition of the scenario.
-        emit ScenarioAdded(_msgSender(), id);
+        emit ScenarioAdded(_msgSender(), id, scenario.input_amount, index_id);
     }
 
     /**
