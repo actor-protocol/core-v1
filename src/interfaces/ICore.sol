@@ -8,7 +8,7 @@ interface ICore {
     event RegisterUpdated(RegisterType indexed t, address indexed addr, bool indexed value);
     event ExecutionStateUpdated(bool _old, bool indexed _new);
 
-    event ScenarioAdded(address indexed, uint64 indexed);
+    event ScenarioAdded(address indexed, uint64 indexed, uint256 indexed, uint64);
     event ScenarioRemoved(address indexed, uint64 indexed);
     event ScenarioExecuted(address indexed, uint64 indexed);
 
@@ -26,7 +26,7 @@ interface ICore {
     function getScenariosIdsByOwner(address) external view returns (uint64[] memory);
 
     // Scenario write methods.
-    function addScenario(Scenario calldata) external returns (uint64);
+    function addScenario(Scenario calldata, uint64) external returns (uint64);
     function removeScenario(uint64) external;
     function executeScenario(address, uint64, uint8) external;
 }

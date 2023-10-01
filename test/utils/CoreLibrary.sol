@@ -56,7 +56,7 @@ library CoreLibrary {
         });
 
         // Add the scenario to the Core contract.
-        id = core.addScenario(scenario);
+        id = core.addScenario(scenario, 0);
 
         // Stop the sender address simulation.
         Vm(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D).stopPrank();
@@ -102,7 +102,7 @@ library CoreLibrary {
         });
 
         // Add the scenario to the Core contract.
-        id = core.addScenario(scenario);
+        id = core.addScenario(scenario, 0);
 
         // Stop the sender address simulation.
         Vm(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D).stopPrank();
