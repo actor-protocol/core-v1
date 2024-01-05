@@ -244,7 +244,7 @@ contract CoreTest is Test {
         // Create a script for the scenario with an invalid source address (address(0)).
         Script[] memory scripts = new Script[](1);
         scripts[0].sources_to_verify = new SourceData[](1);
-        scripts[0].sources_to_verify[0] = SourceData({addr: address(0), kind: 0, input: "", condition: ""});
+        scripts[0].sources_to_verify[0] = SourceData({addr: address(0), kind: 0, input: "", condition: 0});
 
         Scenario memory scenario = Scenario({
             owner: address(this),
@@ -356,7 +356,7 @@ contract CoreTest is Test {
             addr: address(dexsource),
             kind: 1, // Invalid Kind
             input: "",
-            condition: ""
+            condition: 0
         });
 
         ActionData[] memory actions = new ActionData[](1);
@@ -381,7 +381,7 @@ contract CoreTest is Test {
             addr: address(dexsource),
             kind: 1, // Invalid Kind
             input: "",
-            condition: ""
+            condition: 0
         });
 
         ActionData[] memory actions = new ActionData[](1);
@@ -402,7 +402,7 @@ contract CoreTest is Test {
     function testExecutionRevertExecuteScenario() external {
         // Create an invalid scenario with an invalid action executor input (empty data).
         SourceData[] memory sources = new SourceData[](1);
-        sources[0] = SourceData({addr: address(dexsource), kind: 0, input: "", condition: ""});
+        sources[0] = SourceData({addr: address(dexsource), kind: 0, input: "", condition: 0});
 
         ActionData[] memory actions = new ActionData[](1);
         actions[0] = ActionData({executor: address(transferExecutor), input: ""});
@@ -422,7 +422,7 @@ contract CoreTest is Test {
     function testInvalidFinalOutputExecuteScenario() external {
         // Create an invalid scenario with an executor that does nothing.
         SourceData[] memory sources = new SourceData[](1);
-        sources[0] = SourceData({addr: address(dexsource), kind: 0, input: "", condition: ""});
+        sources[0] = SourceData({addr: address(dexsource), kind: 0, input: "", condition: 0});
 
         ActionData[] memory actions = new ActionData[](1);
         actions[0] = ActionData({executor: address(nothingExecutor), input: ""});
@@ -442,7 +442,7 @@ contract CoreTest is Test {
     function testExecuteScenario() external {
         // Create a valid scenario with a transfer action to address(3).
         SourceData[] memory sources = new SourceData[](1);
-        sources[0] = SourceData({addr: address(dexsource), kind: 0, input: "", condition: ""});
+        sources[0] = SourceData({addr: address(dexsource), kind: 0, input: "", condition: 0});
 
         ActionData[] memory actions = new ActionData[](1);
         actions[0] = ActionData({executor: address(transferExecutor), input: abi.encode(address(3))});

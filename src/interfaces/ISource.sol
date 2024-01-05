@@ -3,8 +3,8 @@ pragma solidity ^0.8.21;
 
 struct SourceCall {
     uint8 kind;
+    uint8 condition;
     bytes input;
-    bytes condition;
 }
 
 interface ISource {
